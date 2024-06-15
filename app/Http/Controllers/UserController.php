@@ -65,11 +65,11 @@ class UserController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'senha' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $status = Password::reset(
-            $request->only('email', 'senha', 'senha_confirmation', 'token'),
+            $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
                 $user->forceFill([
                     'password' => Hash::make($password)
@@ -80,7 +80,7 @@ class UserController extends Controller
         if ($status == Password::PASSWORD_RESET) {
             return response()->json(['message' => __($status)], 200);
         }
-
+                
         throw ValidationException::withMessages([
             'email' => [trans($status)],
         ]);
