@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
@@ -51,7 +52,10 @@ class UserController extends Controller
 
         $token = $usuario->createToken('api-token')->plainTextToken;
 
-        return response()->json(['token' => $token], 200);
+        // Redirecionar ao dashboard após o login bem-sucedido
+        Auth::login($usuario);
+
+        return redirect()->intended('/dashboard');
     }
 
     public function logout(Request $request)
@@ -78,9 +82,9 @@ class UserController extends Controller
         );
 
         if ($status == Password::PASSWORD_RESET) {
-            return response()->json(['message' => __($status)], 200);
+            return redirect()->route('login')->with('status', __($status));
         }
-                
+
         throw ValidationException::withMessages([
             'email' => [trans($status)],
         ]);
