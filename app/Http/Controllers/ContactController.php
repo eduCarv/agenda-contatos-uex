@@ -32,6 +32,11 @@ class ContactController extends Controller
             'longitude' => 'nullable|string|max:255',
         ]);        
 
+        //Como não consegui usar a Geocoding API do google vou deixar apenas comentado
+        //Usando o endereço fornecido no request faria um acesso a GeocodingAPI 
+        //para pegar a latitude e longitude e colocar nos campos designados antes de salvar.
+        //Assim o front pode posicionar o pin no mapa de acordo com essas coordenadas
+
         $contact = Auth::user()->contacts()->create($request->all());
 
         return response()->json($contact, 201);
@@ -70,5 +75,17 @@ class ContactController extends Controller
         $contact->delete();
 
         return response()->json(['message' => 'Contato excluído com sucesso']);
+    }
+
+    public function filtrarContatos(Request $request)
+    {
+        $termo = $request->termo;
+
+        $contatos = Contact::where(function ($query) use ($termo) {
+            $query->where('nome', 'like', "%$termo%")
+                  ->orWhere('cpf', 'like', "%$termo%");
+        })->get();
+
+        return response()->json($contatos);
     }
 }
