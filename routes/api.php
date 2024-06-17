@@ -28,7 +28,6 @@ Route::prefix('v1')->group(function () {
         Route::put('/contacts/{id}', [ContactController::class, 'update']); //edita contato epecífico
         Route::delete('/contacts/{id}', [ContactController::class, 'destroy']); //exlcui contato específico
         Route::get('/filtrar-contatos', [ContactController::class, 'filtrarContatos']); //Filtro dos contatos
-    
 
         //Rota de endereços
         Route::get('/autocompletar-enderecos', [EnderecoController::class, 'pesquisarEnderecosViaCEP']);    
