@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -58,5 +59,27 @@ class UserController extends Controller
     public function getUser(Request $request)
     {
         return response()->json($request->user(), 200);
+    }
+
+    public function excluirConta(Request $request)
+    {                
+        $request->validate([
+            'senha' => 'required|string',
+        ]);
+     
+        $usuario = Auth::user();
+
+        // Verifica se a senha fornecida corresponde à senha do usuário
+        if (!Hash::check($request->senha, $usuario->password)) {
+            return response()->json(['message' => 'Senha incorreta'], 401);
+        }
+
+        // Deleta todos os contatos associados ao usuário
+        $usuario->contacts()->delete();
+
+        // Deleta o usuário
+        $usuario->delete();
+
+        return response()->json(['message' => 'Conta excluída com sucesso']);
     }
 }

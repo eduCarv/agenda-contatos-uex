@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [UserController::class, 'logout']);
         Route::get('/user', [UserController::class, 'getUser']);
+        Route::delete('/excluir-conta', [UserController::class, 'excluirConta']);
 
         //Rotas de contatos
         Route::get('/contacts', [ContactController::class, 'index']); //Mostra todos os contatos
