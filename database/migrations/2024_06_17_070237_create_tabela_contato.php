@@ -4,22 +4,30 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateContactsTable extends Migration
+class CreateTabelaContato extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('nome');
             $table->string('cpf')->unique();
             $table->string('fone');
-            $table->string('endereco');
             $table->string('cep');
-            $table->string('gps');
+            $table->string('logradouro');
+            $table->string('complemento')->nullable();
+            $table->string('bairro');
+            $table->string('uf', 2);
+            $table->string('estado');
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
